@@ -4,19 +4,7 @@ import validation_constants_test as validation_values
 
 from icecream import ic
 
-
-def printTest(test_value, message=None, separation=False):
-    # If needed a separation in the print can be printed
-    if separation:
-        print('-' * 25)
-
-    # Get the correct color (green or red)
-    RESULT_NATURE = constants.VALIDATE + 'OK!' if test_value else constants.FAIL + 'ERROR!'
-    MESSAGE = '' if message is None else message + ': '
-    print(MESSAGE + RESULT_NATURE + constants.NORMAL)
-
-    # Return the value for continuity of unit tests
-    return test_value
+from test_utils import printTest
 
 
 def testIDGetters():
@@ -84,9 +72,9 @@ def testGetListsValues():
     return test
 
 
-def runTest():
+def runNBAUtilsTest():
     ic.disable()  # To avoid usual debug ic printing if a tests require an error to tests the behavior
-    constants.VERBOSE = False  # To avoid usual error printing if a tests require an error to tests the behavior
+    constants.ERROR_VERBOSE = False  # To avoid usual error printing if a tests require an error to tests the behavior
 
     # Boolean tests continuity flag
     test = True
@@ -96,12 +84,12 @@ def runTest():
     test &= printTest(testGetListsValues(), message='List Values Getters', separation=True)
 
     ic.enable()  # Allow again debug ic printing
-    constants.VERBOSE = True  # Allow again error printing
+    constants.ERROR_VERBOSE = True  # Allow again error printing
 
-    # Return the final tests value
-    return printTest(test, message=constants.CYAN + 'All Tests', separation=True)
+    # Return the final test value
+    return test
 
 
 if __name__ == '__main__':
-    # Final tests result
-    testValue = runTest()
+    # Final nba_utils tests result
+    runNBAUtilsTest()
