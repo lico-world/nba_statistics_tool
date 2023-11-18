@@ -66,8 +66,10 @@ TEAM_ABBREVIATIONS = ['CHA',
                       'SAS']
 
 FAIL = '\033[91m'       # Code to print in green
+WARNING = '\033[33m'    # Code to print in orange
 VALIDATE = '\033[92m'   # Code to print in red
 NORMAL = '\033[0m'      # Code to print in white
 CYAN = '\033[96m'       # Code to print in cyan
 
-VERBOSE = True  # Flag to know if we need to print errors or not (useful for tests)
+ERROR_VERBOSE = True  # Flag to know if we need to print errors or not (useful for tests)
+VERBOSE = False  # Flag to know if we need to print extra information or not (useful for tests)

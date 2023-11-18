@@ -3,6 +3,7 @@ import time
 import re
 
 from nba_api.stats.endpoints import *
+from nba_api.stats.library.parameters import SeasonAll
 from nba_api.stats.static import *
 from nba_api.stats.endpoints import leaguegamefinder
 
@@ -11,7 +12,74 @@ from icecream import ic
 import constants.constants as constants
 
 
+def getPlayerStat(playerID, gamesList, stat):
+    # Verifying that stat format is str
+    if not isinstance(stat, str):
+        if constants.ERROR_VERBOSE:
+            print(constants.WARNING + 'WARNING /!\\ stat should be a str')
+        return None
+
+    # Verifying that gameList is a list
+    if not isinstance(gamesList, list):
+        if constants.ERROR_VERBOSE:
+            print(constants.WARNING + 'WARNING /!\\ gamesList should be a ' + constants.NORMAL + str(type(list)))
+        return None
+
+    # Verifying that gameList is a list of str
+    if not isinstance(gamesList[0], str):
+        if constants.ERROR_VERBOSE:
+            print(constants.WARNING + 'WARNING /!\\ game date.ID should be a ' + constants.NORMAL + str(type(str)))
+        return None
+
+    # Will be used to only keep useful part of the dataframe
+    gameIdType = ''
+
+    # Verifying format of gamesList elements
+    if None not in [re.match("^[A-Za-z][A-Za-z][A-Za-z]\\s\\d{2},\\s\\d{4}$", gameDate) for gameDate in gamesList]:
+        gameIdType = 'GAME_DATE'
+    elif None not in [re.match('^[0-9]+$', gameDate) for gameDate in gamesList]:
+        gameIdType = 'Game_ID'
+    else:
+        if constants.ERROR_VERBOSE:
+            print(constants.WARNING + 'WARNING /!\\ game date | ID format should be '
+                  + constants.NORMAL + 'date : ^[A-Za-z][A-Za-z][A-Za-z]\\s\\d{2},\\s\\d{4}$ | ID : ^[0-9]+$')
+        return None
+
+    # Columns that will be kept in the dataframe
+    requestStat = [stat, gameIdType]
+
+    try:
+        # Request all the player games keeping only wanted stats
+        gamesStats = playergamelog.PlayerGameLog(player_id=playerID, season=SeasonAll.all).get_data_frames()[0]\
+            .filter(items=requestStat).dropna().reset_index(drop=True)
+
+        # Keep only the given games
+        gamesStats = gamesStats.where(gamesStats[gameIdType].isin(gamesList)).dropna().reset_index(drop=True)
+    except Exception as e:
+        ic(e)  # Debug the exception
+        return None
+
+    # Format the result as a list (that will become a dataframe row)
+    result = []
+    for stat in gamesStats[stat]:
+        result.append(stat)
+
+    return result
+
+
+def getPlayerPTS(playerID, gamesList):
+    return getPlayerStat(playerID, gamesList, 'PTS')
+
+
+def getPlayerAST(playerID, gamesList):
+    return getPlayerStat(playerID, gamesList, 'AST')
+
+
 def getPlayerID(playerName):
+    if not isinstance(playerName, str):
+        if constants.VERBOSE:
+            print(constants.WARNING + 'WARNING /!\\ Player Name should be a str')
+        return None
     for player in players.players:
         if playerName in player:
             return player[0]  # If player is found
@@ -21,6 +89,10 @@ def getPlayerID(playerName):
 
 
 def getTeamID(teamAbbreviation):
+    if not isinstance(teamAbbreviation, str):
+        if constants.VERBOSE:
+            print(constants.WARNING + 'WARNING /!\\ Team Acronym should be a str')
+        return None
     for team in teams.teams:
         if teamAbbreviation in team:
             return team[0]  # If team is found
@@ -28,6 +100,8 @@ def getTeamID(teamAbbreviation):
         print(constants.FAIL + 'ERROR /!\\ Invalid Team Acronym')
     return None  # If team is not found
 
+
+# --------------------------------- RANDOM FUNCTIONS BELOW ----------------------------------------------
 
 def getTSPlus(playerID, seasonID):
     # TS% formula: PTS / (2 * (FGA + 0.44 * FTA))
