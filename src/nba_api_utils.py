@@ -55,6 +55,9 @@ def getPlayerStat(playerID, gamesList, stat):
 
         # Keep only the given games
         gamesStats = gamesStats.where(gamesStats[gameIdType].isin(gamesList)).dropna().reset_index(drop=True)
+
+        # Waiting to avoid spam (after the request to avoid waiting in case of error)
+        time.sleep(constants.DELAY)
     except Exception as e:
         ic(e)  # Debug the exception
         return None
@@ -65,14 +68,6 @@ def getPlayerStat(playerID, gamesList, stat):
         result.append(stat)
 
     return result
-
-
-def getPlayerPTS(playerID, gamesList):
-    return getPlayerStat(playerID, gamesList, 'PTS')
-
-
-def getPlayerAST(playerID, gamesList):
-    return getPlayerStat(playerID, gamesList, 'AST')
 
 
 def getPlayerID(playerName):

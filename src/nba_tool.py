@@ -16,9 +16,29 @@ class NBATool:
         self._nbatool__resultData = pd.DataFrame()
 
         # Set the equivalence between the wanted stat and the function that will compute it
+        # This implementation might seem using useless steps but it will make sens when some stats will require other
+        # functions to be called than getPlayerStat
         self._nbatool__statsFunction = {
-            'PTS': nba_utils.getPlayerPTS,
-            'AST': nba_utils.getPlayerAST
+            'PTS': nba_utils.getPlayerStat,
+            'AST': nba_utils.getPlayerStat,
+            'MIN': nba_utils.getPlayerStat,
+            'FGM': nba_utils.getPlayerStat,
+            'FGA': nba_utils.getPlayerStat,
+            'FG_PCT': nba_utils.getPlayerStat,
+            'FG3M': nba_utils.getPlayerStat,
+            'FG3A': nba_utils.getPlayerStat,
+            'FG3_PCT': nba_utils.getPlayerStat,
+            'FTM': nba_utils.getPlayerStat,
+            'FTA': nba_utils.getPlayerStat,
+            'FT_PCT': nba_utils.getPlayerStat,
+            'OREB': nba_utils.getPlayerStat,
+            'DREB': nba_utils.getPlayerStat,
+            'REB': nba_utils.getPlayerStat,
+            'STL': nba_utils.getPlayerStat,
+            'BLK': nba_utils.getPlayerStat,
+            'TOV': nba_utils.getPlayerStat,
+            'PF': nba_utils.getPlayerStat,
+            'PLUS_MINUS': nba_utils.getPlayerStat
         }
 
         # Repartition of the supported statistics among the used APIs
@@ -38,6 +58,6 @@ class NBATool:
 
         # Call all the functions
         for stat in self._nbatool__wantedStats:
-            self._nbatool__resultData[stat] = self._nbatool__statsFunction[stat](playerID, gamesList)
+            self._nbatool__resultData[stat] = self._nbatool__statsFunction[stat](playerID, gamesList, stat)
 
         return self._nbatool__resultData
