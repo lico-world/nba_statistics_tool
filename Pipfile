@@ -9,6 +9,7 @@ nba-api = "*"
 seaborn = "*"
 scipy = "*"
 icecream = "*"
+beautifulsoup4 = "*"
 
 [dev-packages]
 

@@ -2,6 +2,7 @@ import constants.constants as constants
 import pandas as pd
 
 import src.nba_api_utils as nba_utils
+import src.bbr_api_utils as bbr_utils
 
 
 class NBATool:
