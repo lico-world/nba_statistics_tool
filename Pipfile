@@ -10,6 +10,9 @@ seaborn = "*"
 scipy = "*"
 icecream = "*"
 beautifulsoup4 = "*"
+selenium = "*"
+lxml = "*"
+html5lib = "*"
 
 [dev-packages]
 

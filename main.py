@@ -14,8 +14,7 @@ def main():
     # ic(nbaTool.getPlayerStats('Tyrese Haliburton', ['PTS', 'AST', 'TOV', 'PLUS_MINUS'],
     #                           ['NOV 19, 2023', 'NOV 14, 2023', 'NOV 12, 2023']))
 
-    ic(bbr.getPlayerStat('Tyrese Haliburton', ['TS'],
-                         ['NOV 19, 2023', 'NOV 14, 2023', 'NOV 12, 2023']))
+    ic(bbr.getPlayerStat('Alperen Sengun', 'TS'))
 
 
 if __name__ == '__main__':
