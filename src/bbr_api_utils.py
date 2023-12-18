@@ -43,13 +43,23 @@ def getPlayerStat(playerName, stat):
 
     soup = BeautifulSoup(html, 'html.parser')
     div = soup.select_one('table#' + statTable[stat])
+    pd.set_option('display.max_columns', None)
+    seasons = pd.read_html(StringIO(str(div)))[0]['Unnamed: 0_level_0']['Season']
     table = pd.read_html(StringIO(str(div)))[0][statType[stat]][stat]
 
-    result = []
+    data = []
     for t in table:
         if t is None or math.isnan(t):
             break
-        result.append(t)
+        data.append(t)
+
+    years = []
+    for s in seasons:
+        if s is None or math.isnan(t):
+            break
+        years.append(s)
+
+    result = [years, data]
 
     driver.quit()
 
